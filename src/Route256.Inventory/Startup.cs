@@ -1,4 +1,12 @@
-﻿namespace Route256.Inventory;
+﻿using System.Text.Json.Serialization;
+using Dapper;
+using Route256.Inventory.Context;
+using Route256.Inventory.Models;
+using Route256.Inventory.Storage;
+using Route256.Inventory.TypeHandlers;
+using Z.Dapper.Plus;
+
+namespace Route256.Inventory;
 
 public class Startup
 {
@@ -11,7 +19,16 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        DapperPlusManager.Entity<Order>().Table("core.orders").KeepIdentity(true);
+        DapperPlusManager.AddValueConverter(typeof(Product[]), new JsonTypeHandler());
+        
+        services.AddSingleton<IContext, DapperContext>();
+        services.AddSingleton<IOrderStorage, OrderStorage>();
+        services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

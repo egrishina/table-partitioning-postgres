@@ -5,17 +5,16 @@ create database route256;
 
 create schema core;
 
-create type status as enum ('New', 'InProgress', 'Pending');
-
+drop table core.orders;
 create table core.orders
 (
-    id            uuid               default gen_random_uuid(),
-    client_id     bigint    not null,
-    creation_date timestamp not null default current_timestamp,
-    pickup_date   timestamp,
-    status        status,
-    items_data    json      not null,
-    warehouse_id  bigint    not null,
+    id            uuid                 default gen_random_uuid(),
+    client_id     bigint      not null,
+    creation_date timestamptz not null default current_timestamp,
+    pickup_date   timestamptz,
+    status        integer,
+    items_data    text,
+    warehouse_id  bigint      not null,
     constraint pk_orders primary key (id, warehouse_id)
 ) partition by list (warehouse_id);
 
