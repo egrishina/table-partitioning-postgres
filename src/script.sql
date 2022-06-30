@@ -5,7 +5,6 @@ create database route256;
 
 create schema core;
 
-drop table core.orders;
 create table core.orders
 (
     id            uuid                 default gen_random_uuid(),
