@@ -48,7 +48,7 @@ public class OrdersController : Controller
             Status = o.Status,
             Products = o.Products,
             WarehouseId = o.WarehouseId
-        }).ToArray();
+        });
 
         try
         {
